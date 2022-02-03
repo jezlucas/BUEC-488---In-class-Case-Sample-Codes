@@ -33,15 +33,15 @@ library(ggplot2)
 
 
 #set the working directory for the case studies:
-setwd("C:/Users/Ikechukwu Nwaka/Desktop/WINTER 2022/BUEC 488/da_case_studies")
+setwd("D:/Documents/UAlberta Masters/Jez/2nd Year/Winter 2022/TAship/Resources/da_case_studies")
 
 # set data dir, load theme and functions:
-source("C:/Users/Ikechukwu Nwaka/Desktop/WINTER 2022/BUEC 488/da_case_studies/theme_bg.R")
-source("C:/Users/Ikechukwu Nwaka/Desktop/WINTER 2022/BUEC 488/da_case_studies/da_helper_functions.R")
+source("ch00-tech-prep/theme_bg.R")
+source("ch00-tech-prep/da_helper_functions.R")
 
 # data used
 
-source("C:/Users/Ikechukwu Nwaka/Desktop/WINTER 2022/BUEC 488/da_data_repo/set-data-directory.R") 
+data_dir<-"D:/Documents/UAlberta Masters/Jez/2nd Year/Winter 2022/TAship/Resources/da_data_repo"
 
 
 data_in <- paste(data_dir,"cps-earnings","clean/", sep = "/")
@@ -94,7 +94,7 @@ reg3 <- lm_robust(age ~ female, data=cps, se_type = "HC1")
 
 
 # stargazer makes nice regression tables. _r makes them neater + robust SE
-ht<-huxreg(reg,reg2, reg3,
+ht<-huxreg("Women"=reg, "Men"=reg2, "All"=reg3,
            statistics = c(N = "nobs", R2 = "r.squared")) 
 ht
 
@@ -143,8 +143,8 @@ reg6 <- lm_robust(lnw ~ female + age + agesq, data=cps, se_type = "HC1")
 reg7 <- lm_robust(lnw ~ female + age + agesq + agecu + agequ, data=cps, se_type = "HC1")
 
 # show results with robust SE and save them
-huxreg(reg4, reg5, reg6, reg7,statistics = c(N = "nobs", R2 = "r.squared"))
-
+ht2<-huxreg("In wage"=reg4, "In wage"=reg5, "In wage"=reg6, "In wage"=reg7,statistics = c(N = "nobs", R2 = "r.squared"))
+ht2
 
 # LN EARNINGS, EDU CATEG
 
@@ -157,8 +157,8 @@ reg8 <- lm_robust(lnw ~ female, data=cps,se_type = "HC1")
 reg9 <- lm_robust(lnw ~ female + ed_Profess + ed_PhD, data=cps, se_type = "HC1")
 reg10 <- lm_robust(lnw ~ female + ed_MA + ed_PhD, data=cps, se_type = "HC1")
 
-huxreg(reg8, reg9, reg6, reg10,statistics = c(N = "nobs", R2 = "r.squared"))
-
+ht3<-huxreg("Gender Only"=reg8, "Gender + Education"=reg9, "Gender + Age"=reg6, "Gender + Education"=reg10,statistics = c(N = "nobs", R2 = "r.squared"))
+ht3
 
 
 #################################################
@@ -168,10 +168,11 @@ reg11 <- lm_robust(lnw ~ age, data=cps %>% filter(female==1), se_type = "HC1")
 reg12 <- lm_robust(lnw ~ age, data=cps %>% filter(female==0), se_type = "HC1")
 reg13 <- lm_robust(lnw ~ female + age + age*female, data=cps, se_type = "HC1")
 
-huxreg(reg11, reg12, reg13,statistics = c(N = "nobs", R2 = "r.squared"))
+ht4<-huxreg("Women"=reg11, "Men"=reg12, "All"=reg13,statistics = c(N = "nobs", R2 = "r.squared"))
+ht4
 
 #####################################################
-# FOR RPEDICTIONL FUNCTIONAL FORMS & INTERACTIONS WITH GENDER
+# FOR PREDICTIONAL FUNCTIONAL FORMS & INTERACTIONS WITH GENDER
 
 cps <- cps %>% mutate(agesq=age^2,
                       agecu=age^3,
@@ -183,7 +184,8 @@ reg14 <- lm_robust(lnw ~ age + agesq + agecu + agequ, data=cps %>% filter(female
 reg15 <- lm_robust(lnw ~ age + agesq + agecu + agequ, data=cps %>% filter(female==0))
 reg16 <- lm_robust(lnw ~ age + agesq + agecu + agequ + female + female*age + female*agesq + female*agecu + female*agequ, data=cps)
 
-huxreg(reg14, reg15, reg16,statistics = c(N = "nobs", R2 = "r.squared"))
+ht5<-huxreg("In wage"=reg14, "In wage"=reg15, "In wage"=reg16,statistics = c(N = "nobs", R2 = "r.squared"))
+ht5
 
 # PREDICTION AND GRAPH LINEAR
 data_m <- cps %>% filter(female==0)
@@ -317,7 +319,8 @@ reg3 <- lm_robust(lnw ~ female + age + afram + hisp + asian + othernonw + nonUSb
 
 reg4 <- lm_robust(lnw ~ female + age + afram + hisp + asian + othernonw + nonUSborn + ed_Profess + ed_PhD + married + divorced+ wirowed + child1 + child2 + child3 +child4pl + as.factor(stfips) + uhours + fedgov + stagov + locgov + nonprof + union + as.factor(ind2dig) + as.factor(occ2dig) + agesq + agecu + agequ + uhoursqu + uhourscu + uhourssq, data=cps,se_type = "HC1")
 
-huxreg(reg1, reg2, reg3, reg4,statistics = c(N = "nobs", R2 = "r.squared"))
+ht6<-huxreg("In wage"=reg1, "In wage"=reg2, "In wage"=reg3, "In wage"=reg4,statistics = c(N = "nobs", R2 = "r.squared"))
+ht6
 
 #ch10-table-1-gendergap-reg1
 #ch10-table-2-gendergap-reg2
