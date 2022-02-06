@@ -1,31 +1,394 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>POST data</title>
-    <script src="/resources/post.js"></script>
-    <link type="text/css" rel="stylesheet" href="/resources/post.css" />
-</head>
-<body>
+#########################################################################################
+# Prepared for Gabor's Data Analysis
+#
+# Data Analysis for Business, Economics, and Policy
+# by Gabor Bekes and  Gabor Kezdi
+# Cambridge University Press 2021
+#
+# gabors-data-analysis.com 
+#
+# License: Free to share, modify and use for educational purposes. 
+# 	Not to be used for commercial purposes.
 
-    <noscript>
-        <p><strong>Note:</strong> 
-        Since your browser does not support JavaScript, 
-        you must press the button below once to proceed.</p> 
-    </noscript> 
+# CHAPTER 04 
+# CH04A Management quality and firm size: describing patterns of association
+# WMS  dataset
+# version 0.9 2020-08-28
+#########################################################################################
 
-    <form method="post" 
-        action="https://eclass.srv.ualberta.ca/simplesaml/module.php/saml/sp/saml2-acs.php/default-sp">
-    <!-- Need to add this element and call click method, because calling 
-    submit() on the form causes failed submission if the form has another 
-    element with name or id of submit.
-    See: https://developer.mozilla.org/en/DOM/form.submit#Specification -->
-    <input type="submit" id="postLoginSubmitButton"/>
-<input type="hidden" name="SAMLResponse" value="PHNhbWxwOlJlc3BvbnNlIHhtbG5zOnNhbWxwPSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoyLjA6cHJvdG9jb2wiIHhtbG5zOnNhbWw9InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjIuMDphc3NlcnRpb24iIElEPSJfNzgwY2Q0N2I4YzJmYzBlN2MyZmJiM2Q4YmZlMGU4OTBlYWQ2ZWVkMjY5IiBWZXJzaW9uPSIyLjAiIElzc3VlSW5zdGFudD0iMjAyMi0wMi0wNlQwMzoxNjozMFoiIERlc3RpbmF0aW9uPSJodHRwczovL2VjbGFzcy5zcnYudWFsYmVydGEuY2Evc2ltcGxlc2FtbC9tb2R1bGUucGhwL3NhbWwvc3Avc2FtbDItYWNzLnBocC9kZWZhdWx0LXNwIiBJblJlc3BvbnNlVG89Il80OWNjNmY5NjI0OWQwYjk0NDk3ZjI1MmIwZTk2ZThjMDJiZmVjN2ZlMGQiPjxzYW1sOklzc3Vlcj5odHRwczovL2xvZ2luLnVhbGJlcnRhLmNhL3NhbWwyL2lkcC9tZXRhZGF0YS5waHA8L3NhbWw6SXNzdWVyPjxkczpTaWduYXR1cmUgeG1sbnM6ZHM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvMDkveG1sZHNpZyMiPgogIDxkczpTaWduZWRJbmZvPjxkczpDYW5vbmljYWxpemF0aW9uTWV0aG9kIEFsZ29yaXRobT0iaHR0cDovL3d3dy53My5vcmcvMjAwMS8xMC94bWwtZXhjLWMxNG4jIi8+CiAgICA8ZHM6U2lnbmF0dXJlTWV0aG9kIEFsZ29yaXRobT0iaHR0cDovL3d3dy53My5vcmcvMjAwMS8wNC94bWxkc2lnLW1vcmUjcnNhLXNoYTI1NiIvPgogIDxkczpSZWZlcmVuY2UgVVJJPSIjXzc4MGNkNDdiOGMyZmMwZTdjMmZiYjNkOGJmZTBlODkwZWFkNmVlZDI2OSI+PGRzOlRyYW5zZm9ybXM+PGRzOlRyYW5zZm9ybSBBbGdvcml0aG09Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvMDkveG1sZHNpZyNlbnZlbG9wZWQtc2lnbmF0dXJlIi8+PGRzOlRyYW5zZm9ybSBBbGdvcml0aG09Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvMTAveG1sLWV4Yy1jMTRuIyIvPjwvZHM6VHJhbnNmb3Jtcz48ZHM6RGlnZXN0TWV0aG9kIEFsZ29yaXRobT0iaHR0cDovL3d3dy53My5vcmcvMjAwMS8wNC94bWxlbmMjc2hhMjU2Ii8+PGRzOkRpZ2VzdFZhbHVlPmZqWVBOTW5xaENUY2prTGZjKzQ4aThCdXBucVEzK2lRRFBYbzc2bjBiME09PC9kczpEaWdlc3RWYWx1ZT48L2RzOlJlZmVyZW5jZT48L2RzOlNpZ25lZEluZm8+PGRzOlNpZ25hdHVyZVZhbHVlPmE3dXZUQk4wWVdKN09BUEhGY012cFhRdmJkczlnb0lrL2RyQWppWjhQYno5ZnlYaE41SlBnZFNGN0Z4bkVFRzBMb1hYQnBLb0wvYjJDZEwya0s4aXNpcUNpR3RmQytWUWhjZ2FaZXZJSXJwNlNWMTFoblRjUWUvb2luclBWczZ6bVhGK1haTUdyVmxMam1xckFuaXNudTIwRmYzTHFRQmJiODJPOVdPaXh6YnVDMkNHME41eUdSNDFlczhEdGFXeTUrNS95cStDVGlOMTR0OFp2ZHg2SXgxNVNHYUVqUVZFUitYVjJraUVEc2tWZEZZOTlJOUlKWkRFdmZ0OEp3UzFJc0pId2VUcmEwdjdwTUk3T0xpRVVrQmhMV2Q2WExUOFJmYkYxT2ViUWQzUU5qeVdQNVdnNk0vYUloQ1BrUXd3TVp5dnkycitXNUNSdXdMcnVjeHdPQT09PC9kczpTaWduYXR1cmVWYWx1ZT4KPGRzOktleUluZm8+PGRzOlg1MDlEYXRhPjxkczpYNTA5Q2VydGlmaWNhdGU+TUlJRVV6Q0NBenVnQXdJQkFnSUpBSjBGbjRKd01mdU9NQTBHQ1NxR1NJYjNEUUVCQ3dVQU1JRy9NUXN3Q1FZRFZRUUdFd0pEUVRFUU1BNEdBMVVFQ0F3SFFXeGlaWEowWVRFUk1BOEdBMVVFQnd3SVJXUnRiMjUwYjI0eEhqQWNCZ05WQkFvTUZWVnVhWFpsY25OcGRIa2diMllnUVd4aVpYSjBZVEVxTUNnR0ExVUVDd3doU1c1bWIzSnRZWFJwYjI0Z1UyVnlkbWxqWlhNZ0ppQlVaV05vYm05c2IyZDVNUm93R0FZRFZRUUREQkZzYjJkcGJpNTFZV3hpWlhKMFlTNWpZVEVqTUNFR0NTcUdTSWIzRFFFSkFSWVVkR0Z1ZEc5dWFXOUFkV0ZzWW1WeWRHRXVZMkV3SGhjTk1UVXhNakl6TVRZek1UTTJXaGNOTWpVeE1qSXdNVFl6TVRNMldqQ0J2ekVMTUFrR0ExVUVCaE1DUTBFeEVEQU9CZ05WQkFnTUIwRnNZbVZ5ZEdFeEVUQVBCZ05WQkFjTUNFVmtiVzl1ZEc5dU1SNHdIQVlEVlFRS0RCVlZibWwyWlhKemFYUjVJRzltSUVGc1ltVnlkR0V4S2pBb0JnTlZCQXNNSVVsdVptOXliV0YwYVc5dUlGTmxjblpwWTJWeklDWWdWR1ZqYUc1dmJHOW5lVEVhTUJnR0ExVUVBd3dSYkc5bmFXNHVkV0ZzWW1WeWRHRXVZMkV4SXpBaEJna3Foa2lHOXcwQkNRRVdGSFJoYm5SdmJtbHZRSFZoYkdKbGNuUmhMbU5oTUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGQUFPQ0FROEFNSUlCQ2dLQ0FRRUF5Mmx3bEoyWmdVN1MxenFZNFJwTWgxQWNadU8wdlQ2Qnk0eFBkRXV0Q291ek1tWERpbjk5aVRBNjdhVjZqMHdIY0pnZXo1NFA1anUyWEdxL1grSjB2NWhIMUJrUkU4akE3TUcyU3Y0RkFtdGpBYlNkOXU2YjRrd3pQQXZiUCsrR1cvazdrbEJUWmVvOEFSSVNJdVEzUTZSSFNvZGU3ZWU1WVNhSHZoTVBNL2oxSUdMWmdtSGNhY2lmaWV4RSsrK0p5alVXMDdUUFJpTXhZaWtDRFVwc1gxQzB4VWxuZWZyeitXdUlxWWxnZHFKMjJlY25IeGpFSnFxQVp6M0lPQ2VJTDFOMnpLZnE5SjZKc1c3RzNmMW5DaW52MmdPZmZyQWVMUGx1YmRhaXBkNmxmSDE4UzFPaWh0cXlLajRXL2ZKQUNRRGJzTW12MXpXbHptRXdDcklIUlFJREFRQUJvMUF3VGpBZEJnTlZIUTRFRmdRVXU4czZaK2taUkpJbkhnbzI3VzNQQVZmNE9xQXdId1lEVlIwakJCZ3dGb0FVdThzNlora1pSSkluSGdvMjdXM1BBVmY0T3FBd0RBWURWUjBUQkFVd0F3RUIvekFOQmdrcWhraUc5dzBCQVFzRkFBT0NBUUVBditVZjc3WnI2di9kSk84TnQvQ1YzWHkrSTgxQVpXckRjbWF5VkgzL1poSXVYQXNkY3ZWNUh5UGxRb1g3eWxEUXRreXZ6LzRTY3pKVjR2bjE5YWVzVG1YYW5BRWpLOHdFaDZ2MVlYKzgwU2RLV1cweWs2VEVWODg3UVhLV0Q4TmdxRnp0ZXRJWmsyYzByN0t4Y0VMdk1QYW1ucmQ2SGdtR2xNbDVhak5LVmYvOVZSa1hCVnJpZ0RXWUZpRkRhc2twZlU0ZGhLSW40MXB2eDFaRi9aQnY5VUhOTkRYb0hMUlFLalFlb0FSdHFVZVMwSVNoOC96Y09OZmp5T3FoSzNEM0lIandRQTExRmh4eC9id3lZeG5mUFdwU0c3b1BoU3ZPNDJLQXVydXlSNTQ0TndhYUJCeDBLa2Zhb1pyV01YSGE0RGRxNmg3NjJrSjRkdWNwWFpUelBRPT08L2RzOlg1MDlDZXJ0aWZpY2F0ZT48L2RzOlg1MDlEYXRhPjwvZHM6S2V5SW5mbz48L2RzOlNpZ25hdHVyZT48c2FtbHA6U3RhdHVzPjxzYW1scDpTdGF0dXNDb2RlIFZhbHVlPSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoyLjA6c3RhdHVzOlN1Y2Nlc3MiLz48L3NhbWxwOlN0YXR1cz48c2FtbDpBc3NlcnRpb24geG1sbnM6eHNpPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYS1pbnN0YW5jZSIgeG1sbnM6eHM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvWE1MU2NoZW1hIiBJRD0iXzViYmI4NjlmZWE1MWVhMTdiMGMwNjBmNjYwODA2MjRjYWI2ZmNjZjE0MyIgVmVyc2lvbj0iMi4wIiBJc3N1ZUluc3RhbnQ9IjIwMjItMDItMDZUMDM6MTY6MzBaIj48c2FtbDpJc3N1ZXI+aHR0cHM6Ly9sb2dpbi51YWxiZXJ0YS5jYS9zYW1sMi9pZHAvbWV0YWRhdGEucGhwPC9zYW1sOklzc3Vlcj48ZHM6U2lnbmF0dXJlIHhtbG5zOmRzPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwLzA5L3htbGRzaWcjIj4KICA8ZHM6U2lnbmVkSW5mbz48ZHM6Q2Fub25pY2FsaXphdGlvbk1ldGhvZCBBbGdvcml0aG09Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvMTAveG1sLWV4Yy1jMTRuIyIvPgogICAgPGRzOlNpZ25hdHVyZU1ldGhvZCBBbGdvcml0aG09Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvMDQveG1sZHNpZy1tb3JlI3JzYS1zaGEyNTYiLz4KICA8ZHM6UmVmZXJlbmNlIFVSST0iI181YmJiODY5ZmVhNTFlYTE3YjBjMDYwZjY2MDgwNjI0Y2FiNmZjY2YxNDMiPjxkczpUcmFuc2Zvcm1zPjxkczpUcmFuc2Zvcm0gQWxnb3JpdGhtPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwLzA5L3htbGRzaWcjZW52ZWxvcGVkLXNpZ25hdHVyZSIvPjxkczpUcmFuc2Zvcm0gQWxnb3JpdGhtPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzEwL3htbC1leGMtYzE0biMiLz48L2RzOlRyYW5zZm9ybXM+PGRzOkRpZ2VzdE1ldGhvZCBBbGdvcml0aG09Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvMDQveG1sZW5jI3NoYTI1NiIvPjxkczpEaWdlc3RWYWx1ZT5iUDMrb2tJVXM4MDhINlNDUExqU0dsQ1VQRmNXQ2RpbnllK1B4Q2hqdVRJPTwvZHM6RGlnZXN0VmFsdWU+PC9kczpSZWZlcmVuY2U+PC9kczpTaWduZWRJbmZvPjxkczpTaWduYXR1cmVWYWx1ZT5TZFk0RzgxWGJDcWtHdFo4UTk4Z3hvcXRIL3YwdkppcXRuNDV6ak9JOXFDY3U1WFp4RWl5NUQ5YlYwMmRKL2htVTI2UGlLM2ZIZUZkck5qeUpSaDlpc0NISDZGNmNKR2ZQTXpsakdGS2JJcFpudHpzVjA3TmFVZzZMci9DdTJNbXZXa2h4VVFQaGRwU3h4L3JEUHpMVDRVSU5jR2tSNVI1aXE4OGgzcFk2bVZLc2lqZTRSR0I0VDA2bzlobng2L3RNcmdTVEJrS3l2VWt0K29sOGNlSGJtbVVYbWF0NVlKZnRndzdkNURDQTkrVjJUVTZzU1Y2NXFGa1VZa3lJU0VzdDUwRFlRUzhmd2xGcXdkeXpDUFYvbUY3Tk4wTmZ4RkJhaEpHSHFucUNVWHpHSEVIMnE4a0VEalNGKzBnTjB6OFU0UGphK2lGc1lGVGRpN0lxQkJZU0E9PTwvZHM6U2lnbmF0dXJlVmFsdWU+CjxkczpLZXlJbmZvPjxkczpYNTA5RGF0YT48ZHM6WDUwOUNlcnRpZmljYXRlPk1JSUVVekNDQXp1Z0F3SUJBZ0lKQUowRm40SndNZnVPTUEwR0NTcUdTSWIzRFFFQkN3VUFNSUcvTVFzd0NRWURWUVFHRXdKRFFURVFNQTRHQTFVRUNBd0hRV3hpWlhKMFlURVJNQThHQTFVRUJ3d0lSV1J0YjI1MGIyNHhIakFjQmdOVkJBb01GVlZ1YVhabGNuTnBkSGtnYjJZZ1FXeGlaWEowWVRFcU1DZ0dBMVVFQ3d3aFNXNW1iM0p0WVhScGIyNGdVMlZ5ZG1salpYTWdKaUJVWldOb2JtOXNiMmQ1TVJvd0dBWURWUVFEREJGc2IyZHBiaTUxWVd4aVpYSjBZUzVqWVRFak1DRUdDU3FHU0liM0RRRUpBUllVZEdGdWRHOXVhVzlBZFdGc1ltVnlkR0V1WTJFd0hoY05NVFV4TWpJek1UWXpNVE0yV2hjTk1qVXhNakl3TVRZek1UTTJXakNCdnpFTE1Ba0dBMVVFQmhNQ1EwRXhFREFPQmdOVkJBZ01CMEZzWW1WeWRHRXhFVEFQQmdOVkJBY01DRVZrYlc5dWRHOXVNUjR3SEFZRFZRUUtEQlZWYm1sMlpYSnphWFI1SUc5bUlFRnNZbVZ5ZEdFeEtqQW9CZ05WQkFzTUlVbHVabTl5YldGMGFXOXVJRk5sY25acFkyVnpJQ1lnVkdWamFHNXZiRzluZVRFYU1CZ0dBMVVFQXd3UmJHOW5hVzR1ZFdGc1ltVnlkR0V1WTJFeEl6QWhCZ2txaGtpRzl3MEJDUUVXRkhSaGJuUnZibWx2UUhWaGJHSmxjblJoTG1OaE1JSUJJakFOQmdrcWhraUc5dzBCQVFFRkFBT0NBUThBTUlJQkNnS0NBUUVBeTJsd2xKMlpnVTdTMXpxWTRScE1oMUFjWnVPMHZUNkJ5NHhQZEV1dENvdXpNbVhEaW45OWlUQTY3YVY2ajB3SGNKZ2V6NTRQNWp1MlhHcS9YK0owdjVoSDFCa1JFOGpBN01HMlN2NEZBbXRqQWJTZDl1NmI0a3d6UEF2YlArK0dXL2s3a2xCVFplbzhBUklTSXVRM1E2UkhTb2RlN2VlNVlTYUh2aE1QTS9qMUlHTFpnbUhjYWNpZmlleEUrKytKeWpVVzA3VFBSaU14WWlrQ0RVcHNYMUMweFVsbmVmcnorV3VJcVlsZ2RxSjIyZWNuSHhqRUpxcUFaejNJT0NlSUwxTjJ6S2ZxOUo2SnNXN0czZjFuQ2ludjJnT2ZmckFlTFBsdWJkYWlwZDZsZkgxOFMxT2lodHF5S2o0Vy9mSkFDUURic01tdjF6V2x6bUV3Q3JJSFJRSURBUUFCbzFBd1RqQWRCZ05WSFE0RUZnUVV1OHM2WitrWlJKSW5IZ28yN1czUEFWZjRPcUF3SHdZRFZSMGpCQmd3Rm9BVXU4czZaK2taUkpJbkhnbzI3VzNQQVZmNE9xQXdEQVlEVlIwVEJBVXdBd0VCL3pBTkJna3Foa2lHOXcwQkFRc0ZBQU9DQVFFQXYrVWY3N1pyNnYvZEpPOE50L0NWM1h5K0k4MUFaV3JEY21heVZIMy9aaEl1WEFzZGN2VjVIeVBsUW9YN3lsRFF0a3l2ei80U2N6SlY0dm4xOWFlc1RtWGFuQUVqSzh3RWg2djFZWCs4MFNkS1dXMHlrNlRFVjg4N1FYS1dEOE5ncUZ6dGV0SVprMmMwcjdLeGNFTHZNUGFtbnJkNkhnbUdsTWw1YWpOS1ZmLzlWUmtYQlZyaWdEV1lGaUZEYXNrcGZVNGRoS0luNDFwdngxWkYvWkJ2OVVITk5EWG9ITFJRS2pRZW9BUnRxVWVTMElTaDgvemNPTmZqeU9xaEszRDNJSGp3UUExMUZoeHgvYnd5WXhuZlBXcFNHN29QaFN2TzQyS0F1cnV5UjU0NE53YWFCQngwS2tmYW9acldNWEhhNERkcTZoNzYya0o0ZHVjcFhaVHpQUT09PC9kczpYNTA5Q2VydGlmaWNhdGU+PC9kczpYNTA5RGF0YT48L2RzOktleUluZm8+PC9kczpTaWduYXR1cmU+PHNhbWw6U3ViamVjdD48c2FtbDpOYW1lSUQgU1BOYW1lUXVhbGlmaWVyPSJodHRwczovL2VjbGFzcy5zcnYudWFsYmVydGEuY2Evc3AiIEZvcm1hdD0idXJuOm9hc2lzOm5hbWVzOnRjOlNBTUw6Mi4wOm5hbWVpZC1mb3JtYXQ6dHJhbnNpZW50Ij5fN2M4MzI3MTMzYWRjZTc3Y2RjMTk4OThjNmY1ZDljZmRhNGFjOWIxNTE4PC9zYW1sOk5hbWVJRD48c2FtbDpTdWJqZWN0Q29uZmlybWF0aW9uIE1ldGhvZD0idXJuOm9hc2lzOm5hbWVzOnRjOlNBTUw6Mi4wOmNtOmJlYXJlciI+PHNhbWw6U3ViamVjdENvbmZpcm1hdGlvbkRhdGEgTm90T25PckFmdGVyPSIyMDIyLTAyLTA2VDAzOjIxOjMwWiIgUmVjaXBpZW50PSJodHRwczovL2VjbGFzcy5zcnYudWFsYmVydGEuY2Evc2ltcGxlc2FtbC9tb2R1bGUucGhwL3NhbWwvc3Avc2FtbDItYWNzLnBocC9kZWZhdWx0LXNwIiBJblJlc3BvbnNlVG89Il80OWNjNmY5NjI0OWQwYjk0NDk3ZjI1MmIwZTk2ZThjMDJiZmVjN2ZlMGQiLz48L3NhbWw6U3ViamVjdENvbmZpcm1hdGlvbj48L3NhbWw6U3ViamVjdD48c2FtbDpDb25kaXRpb25zIE5vdEJlZm9yZT0iMjAyMi0wMi0wNlQwMzoxNjowMFoiIE5vdE9uT3JBZnRlcj0iMjAyMi0wMi0wNlQwMzoyMTozMFoiPjxzYW1sOkF1ZGllbmNlUmVzdHJpY3Rpb24+PHNhbWw6QXVkaWVuY2U+aHR0cHM6Ly9lY2xhc3Muc3J2LnVhbGJlcnRhLmNhL3NwPC9zYW1sOkF1ZGllbmNlPjwvc2FtbDpBdWRpZW5jZVJlc3RyaWN0aW9uPjwvc2FtbDpDb25kaXRpb25zPjxzYW1sOkF1dGhuU3RhdGVtZW50IEF1dGhuSW5zdGFudD0iMjAyMi0wMi0wNVQxOTo0OTozNFoiIFNlc3Npb25Ob3RPbk9yQWZ0ZXI9IjIwMjItMDItMDZUMDM6NDk6MzRaIiBTZXNzaW9uSW5kZXg9Il8zYTk2MTU3YzdmN2QyMjEyMTY2ZDhiYmM4NTNhNTM4MjYxZWU5NzcwNmQiPjxzYW1sOkF1dGhuQ29udGV4dD48c2FtbDpBdXRobkNvbnRleHRDbGFzc1JlZj51cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoyLjA6YWM6Y2xhc3NlczpQYXNzd29yZFByb3RlY3RlZFRyYW5zcG9ydDwvc2FtbDpBdXRobkNvbnRleHRDbGFzc1JlZj48L3NhbWw6QXV0aG5Db250ZXh0Pjwvc2FtbDpBdXRoblN0YXRlbWVudD48c2FtbDpBdHRyaWJ1dGVTdGF0ZW1lbnQ+PHNhbWw6QXR0cmlidXRlIE5hbWU9InVybjpvaWQ6MC45LjIzNDIuMTkyMDAzMDAuMTAwLjEuMSIgTmFtZUZvcm1hdD0idXJuOm9hc2lzOm5hbWVzOnRjOlNBTUw6Mi4wOmF0dHJuYW1lLWZvcm1hdDp1cmkiPjxzYW1sOkF0dHJpYnV0ZVZhbHVlIHhzaTp0eXBlPSJ4czpzdHJpbmciPmplenJlZWwxPC9zYW1sOkF0dHJpYnV0ZVZhbHVlPjwvc2FtbDpBdHRyaWJ1dGU+PHNhbWw6QXR0cmlidXRlIE5hbWU9InVybjpvaWQ6Mi4xNi44NDAuMS4xMTM3MzAuMy4xLjI0MSIgTmFtZUZvcm1hdD0idXJuOm9hc2lzOm5hbWVzOnRjOlNBTUw6Mi4wOmF0dHJuYW1lLWZvcm1hdDp1cmkiPjxzYW1sOkF0dHJpYnV0ZVZhbHVlIHhzaTp0eXBlPSJ4czpzdHJpbmciPkplejwvc2FtbDpBdHRyaWJ1dGVWYWx1ZT48L3NhbWw6QXR0cmlidXRlPjxzYW1sOkF0dHJpYnV0ZSBOYW1lPSJ1cm46b2lkOjIuNS40LjQyIiBOYW1lRm9ybWF0PSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoyLjA6YXR0cm5hbWUtZm9ybWF0OnVyaSI+PHNhbWw6QXR0cmlidXRlVmFsdWUgeHNpOnR5cGU9InhzOnN0cmluZyI+SmV6cmVlbDwvc2FtbDpBdHRyaWJ1dGVWYWx1ZT48L3NhbWw6QXR0cmlidXRlPjxzYW1sOkF0dHJpYnV0ZSBOYW1lPSJ1cm46b2lkOjIuNS40LjQiIE5hbWVGb3JtYXQ9InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjIuMDphdHRybmFtZS1mb3JtYXQ6dXJpIj48c2FtbDpBdHRyaWJ1dGVWYWx1ZSB4c2k6dHlwZT0ieHM6c3RyaW5nIj5MdWNhczwvc2FtbDpBdHRyaWJ1dGVWYWx1ZT48L3NhbWw6QXR0cmlidXRlPjxzYW1sOkF0dHJpYnV0ZSBOYW1lPSJ1cm46b2lkOjAuOS4yMzQyLjE5MjAwMzAwLjEwMC4xLjMiIE5hbWVGb3JtYXQ9InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjIuMDphdHRybmFtZS1mb3JtYXQ6dXJpIj48c2FtbDpBdHRyaWJ1dGVWYWx1ZSB4c2k6dHlwZT0ieHM6c3RyaW5nIj5qZXpyZWVsMUB1YWxiZXJ0YS5jYTwvc2FtbDpBdHRyaWJ1dGVWYWx1ZT48L3NhbWw6QXR0cmlidXRlPjxzYW1sOkF0dHJpYnV0ZSBOYW1lPSJ1cm46b2lkOjIuMTYuODQwLjEuMTEzNzMwLjMuMS4zIiBOYW1lRm9ybWF0PSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoyLjA6YXR0cm5hbWUtZm9ybWF0OnVyaSI+PHNhbWw6QXR0cmlidXRlVmFsdWUgeHNpOnR5cGU9InhzOnN0cmluZyI+MTY4NDAyMTwvc2FtbDpBdHRyaWJ1dGVWYWx1ZT48L3NhbWw6QXR0cmlidXRlPjxzYW1sOkF0dHJpYnV0ZSBOYW1lPSJ1aWROdW1iZXIiIE5hbWVGb3JtYXQ9InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjIuMDphdHRybmFtZS1mb3JtYXQ6dXJpIj48c2FtbDpBdHRyaWJ1dGVWYWx1ZSB4c2k6dHlwZT0ieHM6c3RyaW5nIj4zMzA1NjE8L3NhbWw6QXR0cmlidXRlVmFsdWU+PC9zYW1sOkF0dHJpYnV0ZT48c2FtbDpBdHRyaWJ1dGUgTmFtZT0idW9mYXJ0aSIgTmFtZUZvcm1hdD0idXJuOm9hc2lzOm5hbWVzOnRjOlNBTUw6Mi4wOmF0dHJuYW1lLWZvcm1hdDp1cmkiPjxzYW1sOkF0dHJpYnV0ZVZhbHVlIHhzaTp0eXBlPSJ4czpzdHJpbmciPlNURDwvc2FtbDpBdHRyaWJ1dGVWYWx1ZT48c2FtbDpBdHRyaWJ1dGVWYWx1ZSB4c2k6dHlwZT0ieHM6c3RyaW5nIj5FTVA8L3NhbWw6QXR0cmlidXRlVmFsdWU+PC9zYW1sOkF0dHJpYnV0ZT48c2FtbDpBdHRyaWJ1dGUgTmFtZT0idXJuOm9pZDoyLjE2Ljg0MC4xLjExMzczMC4zLjEuMiIgTmFtZUZvcm1hdD0idXJuOm9hc2lzOm5hbWVzOnRjOlNBTUw6Mi4wOmF0dHJuYW1lLWZvcm1hdDp1cmkiPjxzYW1sOkF0dHJpYnV0ZVZhbHVlIHhzaTp0eXBlPSJ4czpzdHJpbmciPjE0MDcwMDwvc2FtbDpBdHRyaWJ1dGVWYWx1ZT48L3NhbWw6QXR0cmlidXRlPjxzYW1sOkF0dHJpYnV0ZSBOYW1lPSJ1cm46b2lkOjEuMy42LjEuNC4xLjU5MjMuMS4xLjEuNyIgTmFtZUZvcm1hdD0idXJuOm9hc2lzOm5hbWVzOnRjOlNBTUw6Mi4wOmF0dHJuYW1lLWZvcm1hdDp1cmkiPjxzYW1sOkF0dHJpYnV0ZVZhbHVlIHhzaTp0eXBlPSJ4czpzdHJpbmciPnVybjptYWNlOnVhbGJlcnRhLmNhOmNsYXNzZXM6dmFsdWUtZGVmOjE3MzA6NzA4MzI8L3NhbWw6QXR0cmlidXRlVmFsdWU+PHNhbWw6QXR0cmlidXRlVmFsdWUgeHNpOnR5cGU9InhzOnN0cmluZyI+dXJuOm1hY2U6dWFsYmVydGEuY2E6Y2xhc3Nlczp2YWx1ZS1kZWY6MTczMDo3MDg2MDwvc2FtbDpBdHRyaWJ1dGVWYWx1ZT48c2FtbDpBdHRyaWJ1dGVWYWx1ZSB4c2k6dHlwZT0ieHM6c3RyaW5nIj51cm46bWFjZTp1YWxiZXJ0YS5jYTpjbGFzc2VzOnZhbHVlLWRlZjoxNzMwOjcwOTQ2PC9zYW1sOkF0dHJpYnV0ZVZhbHVlPjxzYW1sOkF0dHJpYnV0ZVZhbHVlIHhzaTp0eXBlPSJ4czpzdHJpbmciPnVybjptYWNlOnVhbGJlcnRhLmNhOmNsYXNzZXM6dmFsdWUtZGVmOjE3MzA6NzA5NDg8L3NhbWw6QXR0cmlidXRlVmFsdWU+PHNhbWw6QXR0cmlidXRlVmFsdWUgeHNpOnR5cGU9InhzOnN0cmluZyI+dXJuOm1hY2U6dWFsYmVydGEuY2E6Y2xhc3Nlczp2YWx1ZS1kZWY6MTczMDo3MDk1Njwvc2FtbDpBdHRyaWJ1dGVWYWx1ZT48c2FtbDpBdHRyaWJ1dGVWYWx1ZSB4c2k6dHlwZT0ieHM6c3RyaW5nIj51cm46bWFjZTp1YWxiZXJ0YS5jYTpjbGFzc2VzOnZhbHVlLWRlZjoxNzMwOjg3MTkxPC9zYW1sOkF0dHJpYnV0ZVZhbHVlPjxzYW1sOkF0dHJpYnV0ZVZhbHVlIHhzaTp0eXBlPSJ4czpzdHJpbmciPnVybjptYWNlOnVhbGJlcnRhLmNhOmNsYXNzZXM6dmFsdWUtZGVmOjE3MzA6ODc1Nzg8L3NhbWw6QXR0cmlidXRlVmFsdWU+PHNhbWw6QXR0cmlidXRlVmFsdWUgeHNpOnR5cGU9InhzOnN0cmluZyI+dXJuOm1hY2U6dWFsYmVydGEuY2E6Y2xhc3Nlczp2YWx1ZS1kZWY6MTc0MDo0MzY5Mjwvc2FtbDpBdHRyaWJ1dGVWYWx1ZT48c2FtbDpBdHRyaWJ1dGVWYWx1ZSB4c2k6dHlwZT0ieHM6c3RyaW5nIj51cm46bWFjZTp1YWxiZXJ0YS5jYTpjbGFzc2VzOnZhbHVlLWRlZjoxNzQwOjQ1ODcxPC9zYW1sOkF0dHJpYnV0ZVZhbHVlPjxzYW1sOkF0dHJpYnV0ZVZhbHVlIHhzaTp0eXBlPSJ4czpzdHJpbmciPnVybjptYWNlOnVhbGJlcnRhLmNhOmNsYXNzZXM6dmFsdWUtZGVmOjE3NDA6OTA4MzI8L3NhbWw6QXR0cmlidXRlVmFsdWU+PHNhbWw6QXR0cmlidXRlVmFsdWUgeHNpOnR5cGU9InhzOnN0cmluZyI+dXJuOm1hY2U6dWFsYmVydGEuY2E6Y2xhc3Nlczp2YWx1ZS1kZWY6MTc0MDo5MDkyODwvc2FtbDpBdHRyaWJ1dGVWYWx1ZT48c2FtbDpBdHRyaWJ1dGVWYWx1ZSB4c2k6dHlwZT0ieHM6c3RyaW5nIj51cm46bWFjZTp1YWxiZXJ0YS5jYTpjbGFzc2VzOnZhbHVlLWRlZjoxNzQwOjkwOTcyPC9zYW1sOkF0dHJpYnV0ZVZhbHVlPjxzYW1sOkF0dHJpYnV0ZVZhbHVlIHhzaTp0eXBlPSJ4czpzdHJpbmciPnVybjptYWNlOnVhbGJlcnRhLmNhOmNsYXNzZXM6dmFsdWUtZGVmOjE3NTA6MjMxNDY8L3NhbWw6QXR0cmlidXRlVmFsdWU+PHNhbWw6QXR0cmlidXRlVmFsdWUgeHNpOnR5cGU9InhzOnN0cmluZyI+dXJuOm1hY2U6dWFsYmVydGEuY2E6Y2xhc3Nlczp2YWx1ZS1kZWY6MTc2MDozMjY2Njwvc2FtbDpBdHRyaWJ1dGVWYWx1ZT48c2FtbDpBdHRyaWJ1dGVWYWx1ZSB4c2k6dHlwZT0ieHM6c3RyaW5nIj51cm46bWFjZTp1YWxiZXJ0YS5jYTpjbGFzc2VzOnZhbHVlLWRlZjoxNzcwOjQ5NDk0PC9zYW1sOkF0dHJpYnV0ZVZhbHVlPjxzYW1sOkF0dHJpYnV0ZVZhbHVlIHhzaTp0eXBlPSJ4czpzdHJpbmciPnVybjptYWNlOnVhbGJlcnRhLmNhOmNsYXNzZXM6dmFsdWUtZGVmOjE3NzA6NTEwMzY8L3NhbWw6QXR0cmlidXRlVmFsdWU+PHNhbWw6QXR0cmlidXRlVmFsdWUgeHNpOnR5cGU9InhzOnN0cmluZyI+dXJuOm1hY2U6dWFsYmVydGEuY2E6Y2xhc3Nlczp2YWx1ZS1kZWY6MTc3MDo1MzMzODwvc2FtbDpBdHRyaWJ1dGVWYWx1ZT48c2FtbDpBdHRyaWJ1dGVWYWx1ZSB4c2k6dHlwZT0ieHM6c3RyaW5nIj51cm46bWFjZTp1YWxiZXJ0YS5jYTpjbGFzc2VzOnZhbHVlLWRlZjoxNzcwOjU3NTY3PC9zYW1sOkF0dHJpYnV0ZVZhbHVlPjxzYW1sOkF0dHJpYnV0ZVZhbHVlIHhzaTp0eXBlPSJ4czpzdHJpbmciPnVybjptYWNlOnVhbGJlcnRhLmNhOmNsYXNzZXM6dmFsdWUtZGVmOjE3ODA6NjI2ODY8L3NhbWw6QXR0cmlidXRlVmFsdWU+PHNhbWw6QXR0cmlidXRlVmFsdWUgeHNpOnR5cGU9InhzOnN0cmluZyI+dXJuOm1hY2U6dWFsYmVydGEuY2E6Y2xhc3Nlczp2YWx1ZS1kZWY6MTc4MDo2Mjk3MDwvc2FtbDpBdHRyaWJ1dGVWYWx1ZT48c2FtbDpBdHRyaWJ1dGVWYWx1ZSB4c2k6dHlwZT0ieHM6c3RyaW5nIj51cm46bWFjZTp1YWxiZXJ0YS5jYTpjbGFzc2VzOnZhbHVlLWRlZjoxNzgwOjY3NDk2PC9zYW1sOkF0dHJpYnV0ZVZhbHVlPjxzYW1sOkF0dHJpYnV0ZVZhbHVlIHhzaTp0eXBlPSJ4czpzdHJpbmciPnVybjptYWNlOnVhbGJlcnRhLmNhOmNsYXNzZXM6dmFsdWUtZGVmOjE3ODA6Njc1MjQ8L3NhbWw6QXR0cmlidXRlVmFsdWU+PC9zYW1sOkF0dHJpYnV0ZT48c2FtbDpBdHRyaWJ1dGUgTmFtZT0idXJuOm9pZDoxLjMuNi4xLjQuMS41OTIzLjEuMS4xLjEiIE5hbWVGb3JtYXQ9InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjIuMDphdHRybmFtZS1mb3JtYXQ6dXJpIj48c2FtbDpBdHRyaWJ1dGVWYWx1ZSB4c2k6dHlwZT0ieHM6c3RyaW5nIj5zdHVkZW50PC9zYW1sOkF0dHJpYnV0ZVZhbHVlPjxzYW1sOkF0dHJpYnV0ZVZhbHVlIHhzaTp0eXBlPSJ4czpzdHJpbmciPmZhY3VsdHk8L3NhbWw6QXR0cmlidXRlVmFsdWU+PHNhbWw6QXR0cmlidXRlVmFsdWUgeHNpOnR5cGU9InhzOnN0cmluZyI+c3RhZmY8L3NhbWw6QXR0cmlidXRlVmFsdWU+PHNhbWw6QXR0cmlidXRlVmFsdWUgeHNpOnR5cGU9InhzOnN0cmluZyI+bWVtYmVyPC9zYW1sOkF0dHJpYnV0ZVZhbHVlPjwvc2FtbDpBdHRyaWJ1dGU+PHNhbWw6QXR0cmlidXRlIE5hbWU9InVybjpvaWQ6MS4zLjYuMS40LjEuNTkyMy4xLjEuMS45IiBOYW1lRm9ybWF0PSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoyLjA6YXR0cm5hbWUtZm9ybWF0OnVyaSI+PHNhbWw6QXR0cmlidXRlVmFsdWUgeHNpOnR5cGU9InhzOnN0cmluZyI+c3R1ZGVudEB1YWxiZXJ0YS5jYTwvc2FtbDpBdHRyaWJ1dGVWYWx1ZT48c2FtbDpBdHRyaWJ1dGVWYWx1ZSB4c2k6dHlwZT0ieHM6c3RyaW5nIj5mYWN1bHR5QHVhbGJlcnRhLmNhPC9zYW1sOkF0dHJpYnV0ZVZhbHVlPjxzYW1sOkF0dHJpYnV0ZVZhbHVlIHhzaTp0eXBlPSJ4czpzdHJpbmciPnN0YWZmQHVhbGJlcnRhLmNhPC9zYW1sOkF0dHJpYnV0ZVZhbHVlPjxzYW1sOkF0dHJpYnV0ZVZhbHVlIHhzaTp0eXBlPSJ4czpzdHJpbmciPm1lbWJlckB1YWxiZXJ0YS5jYTwvc2FtbDpBdHRyaWJ1dGVWYWx1ZT48L3NhbWw6QXR0cmlidXRlPjxzYW1sOkF0dHJpYnV0ZSBOYW1lPSJ1cm46b2lkOjEuMy42LjEuNC4xLjU5MjMuMS4xLjEuMTAiIE5hbWVGb3JtYXQ9InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjIuMDphdHRybmFtZS1mb3JtYXQ6dXJpIj48c2FtbDpBdHRyaWJ1dGVWYWx1ZT48c2FtbDpOYW1lSUQgTmFtZVF1YWxpZmllcj0iaHR0cHM6Ly9sb2dpbi51YWxiZXJ0YS5jYS9zYW1sMi9pZHAvbWV0YWRhdGEucGhwIiBTUE5hbWVRdWFsaWZpZXI9Imh0dHBzOi8vZWNsYXNzLnNydi51YWxiZXJ0YS5jYS9zcCIgRm9ybWF0PSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoyLjA6bmFtZWlkLWZvcm1hdDpwZXJzaXN0ZW50Ij42MjNkNjMzMjhjMWE1MDdhYTdmMGI4OGFkZjlhNmExYTQ1ZjIwNDU0PC9zYW1sOk5hbWVJRD48L3NhbWw6QXR0cmlidXRlVmFsdWU+PC9zYW1sOkF0dHJpYnV0ZT48c2FtbDpBdHRyaWJ1dGUgTmFtZT0iaW5zdGl0dXRpb25hbElkZW50aWZpZXIiIE5hbWVGb3JtYXQ9InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjIuMDphdHRybmFtZS1mb3JtYXQ6dXJpIj48c2FtbDpBdHRyaWJ1dGVWYWx1ZSB4c2k6dHlwZT0ieHM6c3RyaW5nIj5VT0ZBQjwvc2FtbDpBdHRyaWJ1dGVWYWx1ZT48L3NhbWw6QXR0cmlidXRlPjwvc2FtbDpBdHRyaWJ1dGVTdGF0ZW1lbnQ+PC9zYW1sOkFzc2VydGlvbj48L3NhbWxwOlJlc3BvbnNlPg==" /><input type="hidden" name="RelayState" value="https://eclass.srv.ualberta.ca/login/index.php" />        <noscript>
-            <button type="submit" class="btn">Submit</button>
-        </noscript>
-    </form>
 
-</body>
-</html>
+
+######################################################################
+
+
+######################################################################
+
+# START NEW SESSION --- it is best to start a new session !
+# CLEAR MEMORY
+rm(list=ls())
+
+# Import libraries
+install.packages("renv")
+renv::restore()
+install.packages("tidyverse")
+library(tidyverse)
+library(haven)
+install.packages("Hmisc")
+library(Hmisc)
+install.packages("desc")
+library(desc)
+install.packages("reshape2")
+library(reshape2)
+install.packages("modelsummary")
+library(modelsummary)
+install.packages("urca")
+library(urca)
+install.packages("stargazer")
+library(stargazer)
+install.packages("sandwich")
+library(sandwich)
+
+library(xtable)
+library(modelsummary)
+library(tidyverse)
+library(xtable)
+
+# packages
+library(tidyverse)
+library(haven)
+library(Hmisc)
+library(binsreg)
+library(xtable)
+library(modelsummary)
+
+#set the working directory for the case studies:
+setwd("C:/Users/Ikechukwu Nwaka/Desktop/WINTER 2022/BUEC 488/da_case_studies")
+
+# set data dir, load theme and functions:
+source("C:/Users/Ikechukwu Nwaka/Desktop/WINTER 2022/BUEC 488/da_case_studies/theme_bg.R")
+source("C:/Users/Ikechukwu Nwaka/Desktop/WINTER 2022/BUEC 488/da_case_studies/da_helper_functions.R")
+
+source("C:/Users/Ikechukwu Nwaka/Desktop/WINTER 2022/BUEC 488/da_data_repo/set-data-directory.R") 
+
+data_in <- paste(data_dir,"wms-management-survey","clean/", sep = "/")
+
+use_case_dir <- "ch04-management-firm-size/"
+data_out <- use_case_dir
+output <- paste0(use_case_dir,"output/")
+create_output_if_doesnt_exist(output)
+
+
+
+########################################################################
+# Import data
+df <- read_csv(paste0(data_in,"wms_da_textbook.csv"))
+
+df <- df %>%
+  filter(country=="Mexico" & wave==2013 & emp_firm>=100  & emp_firm<=5000)
+
+# Summary in two steps
+datasummary_skim( df$emp_firm )
+describe(df$emp_firm)
+
+# Save workfile
+write.csv(data, paste0(data_out, "ch04-wms-work.csv"), row.names = F)
+
+########################################################################
+
+# Summary
+datasummary( management + emp_firm ~ mean + Median + SD + Min + Max + N , data = df )
+# Somewhat more coumbersome to use dplyr:
+df %>%
+  dplyr::select(management, emp_firm) %>% 
+  summarise_all(tibble::lst(min, max, mean, median, sd, length))
+
+# Histogram
+g1<-ggplot(data = df, aes (x = management)) +
+  geom_histogram_da(binwidth = 0.25, type="percent", boundary = 0) +
+  labs(x = "Management score", y = "Percent") +
+  #scale_x_continuous(breaks = seq(1, 5, by = 1)) +
+  scale_x_continuous(expand = c(0.01,0.01),limits = c(1,5))+
+  scale_y_continuous(expand = c(0.00,0.00),limits=c(0, 0.25), breaks = seq(0, 0.25, by = 0.05), labels = scales::percent_format(accuracy = 1)) +
+  theme_bg() 
+g1
+save_fig("ch04-figure-1-wms-mex-mgmt-hist",output , "small") 
+
+g2a<-ggplot(data = df, aes (x = emp_firm )) +
+  geom_histogram_da(binwidth = 200, type="percent") +
+  labs(x = "Firm size (employment)", y = "Percent") +
+  scale_x_continuous(expand = c(0.01,0.01),limits=c(0, 5000), breaks = seq(0, 5000, by = 1000)) +
+  scale_y_continuous(expand = c(0.00,0.00),limits=c(0, 0.3), breaks = seq(0, 0.3, by = 0.05), labels = scales::percent_format(accuracy = 1)) +
+  theme_bg() 
+g2a
+save_fig("ch04-figure-2a-wms-mex-emp-hist",output , "small")
+
+
+# Generate variable
+df$lnemp = log(df$emp_firm)
+Hmisc::describe(df$lnemp)
+
+# Histogram
+g2b<-ggplot(data = df, aes (x = lnemp)) +
+  geom_histogram_da(binwidth = 0.25, type="percent", boundary=0) +
+  labs(x = "Firm size (ln(employment))", y = "Percent") +
+  scale_x_continuous(expand = c(0.01,0.01),limits = c(4,9)) +
+  scale_y_continuous(expand = c(0.00,0.00),limits=c(0, 0.2), breaks = seq(0, 0.2, by = 0.04), labels = scales::percent_format(accuracy = 1)) +
+  theme_bg() 
+g2b
+save_fig("ch04-figure-2b-wms-mex-lnemp-hist",output , "small")
+
+########################################################################
+
+
+# Stack bar charts some management items by emp bins
+
+# Generate employment bins
+df$emp3bins <- ifelse(df$emp_firm<200, 1, 
+                      ifelse(df$emp_firm>=200 & df$emp_firm<1000, 2,
+                             ifelse(df$emp_firm>=1000, 3,100)
+                      )
+)
+describe(df$emp3bins)
+
+# Create pivot
+df$emp3bins <- as.factor(df$emp3bins)
+
+df1 <- df %>% 
+  dplyr::select(emp3bins,lean1) %>% 
+  group_by (emp3bins,lean1) %>% 
+  dplyr::summarise(Count = n()) %>% 
+  mutate(Percent= round(Count / sum(Count),digits = 5)) %>% ungroup()
+
+
+# Stacked bar
+g3a<-ggplot(data=df1, aes(x=emp3bins, y=Percent, fill = factor(lean1, levels = rev(unique(lean1))))) +
+  geom_bar(stat = "identity", position = "fill",width = 0.6,  color = "white",  size = 0.5, alpha = 0.8) +
+  scale_y_continuous(expand=c(0,0), limits=c(0, 1), breaks = seq(0, 1, by = 0.2), labels = scales::percent_format()) +
+  scale_x_discrete(labels=c("1" = "Small", "2" = "Medium", "3" = "Large")) +
+  scale_fill_manual(values = c(color[3], color[1], color[5], color[2], color[4]), name = NULL) +
+  #scale_fill_manual(values = viridis(5, begin=0, end=0.9), name = NULL) +
+  labs(x = "Firm size (employment), 3 bins", y = "Percent") +
+  theme_bg() +
+  theme(legend.position = "right")
+g3a
+save_fig("ch04-figure-3a-wms-mex-lean1-emp3bins",output , "small")
+
+
+# Create pivot
+df1 <- df %>% 
+  dplyr::select(emp3bins,perf2) %>% 
+  group_by (emp3bins,perf2) %>% 
+  dplyr::summarise(Count = n()) %>% 
+  mutate(Percent= round(Count / sum(Count),digits = 5)) %>% ungroup()
+# use %>% ungroup() when do multiple times group_by
+
+
+g3b<-ggplot(data=df1, aes(x=emp3bins, y=Percent, fill = factor(perf2, levels = rev(unique(perf2))))) +
+  geom_bar(stat = "identity", position = "fill",width = 0.6,  color = "white",  size = 0.5, alpha = 0.8) +
+  scale_y_continuous(expand=c(0,0), limits=c(0, 1), breaks = seq(0, 1, by = 0.2), labels = scales::percent_format()) +
+  scale_x_discrete(labels=c("1" = "Small", "2" = "Medium", "3" = "Large")) +
+  scale_fill_manual(values = c(color[3], color[1], color[5], color[2], color[4]), name = NULL) +
+  #scale_fill_manual(values = viridis(5, begin=0, end=0.8), name = NULL) +
+  labs(x = "Firm size (employment), 3 bins", y = "Percent") +
+  theme_bg() +
+  theme(legend.position = "right")
+g3b
+save_fig("ch04-figure-3b-wms-mex-perf2-emp3bins",output , "small")
+
+# Bin scatters avg score by employment bins
+
+# Option 1: create 3 bins as defined by thresholds
+
+# Summary
+datasummary( emp_firm * emp3bins ~ mean + Median + SD + Min + Max + N , data = df )
+
+# Recode employee bins
+df$emp3bins <- ifelse(df$emp3bins == 1 , 150, 
+                      ifelse(df$emp3bins == 2, 600,
+                             ifelse(df$emp3bins == 3, 3000, NA)))
+# Summary
+datasummary( emp_firm * Factor( emp3bins ) ~ Mean + Median + SD + Min + Max + N , data = df )
+
+# Generate variables by mean
+df1<-df %>% group_by(emp3bins) %>%
+  dplyr::summarize(management_emp3bins=mean(management))
+
+
+# Bin scatters
+g4a<-ggplot(data = df1, aes(x = emp3bins, y = management_emp3bins)) +
+  geom_point(size = 2, color = color[3], fill= color[1], shape = 21, alpha = 0.8, na.rm=T) +
+  #geom_text(aes(label = round(management_emp3bins, 1)), hjust = 0.5, vjust = -1, color = "black", size = 3) +
+  scale_y_continuous(expand = c(0.01,0.01),limits = c(2.4, 3.4), breaks = seq(2.4, 3.4, by=0.2)) +
+  scale_x_continuous(expand = c(0.01,0.01),limits = c(0, 3000), breaks = seq(0,3000, by=500)) +
+  labs(x = "Firm size (employment), 3 bins", y = "Management score") +
+  theme_bg() 
+g4a
+save_fig("ch04-figure-4a-wms-mex-mgmt-emp3bins",output , "small")
+
+# Option 2: create 10 bins as defined by equal cutoffs
+
+df$emp10bins <- df$emp_firm %>% cut_number(10)
+
+
+# Summary
+df_summary<-df %>%
+  select(emp_firm, emp10bins) %>% 
+  group_by(emp10bins) %>%
+  summarise_all(tibble::lst(min, max, mean, median, sd, length))
+df_summary
+
+# Recode
+levels(df$emp10bins) <-  df_summary %>% pull(mean) %>% round()
+df$emp10bins<-as.numeric(levels(df$emp10bins))[df$emp10bins]
+
+# Summary
+df %>%
+  select(emp_firm, emp10bins) %>% 
+  group_by(emp10bins) %>%
+  dplyr::summarise_all(tibble::lst(min, max, mean, median, sd, length))
+
+# Generate variables by mean
+df1 <- df %>% group_by(emp10bins) %>% 
+  dplyr::summarize(management_emp10bins=mean(management))
+
+# Bin scatters
+g4b<-ggplot(data = df1, aes(x = emp10bins, y = management_emp10bins)) +
+  geom_point(size = 2, color = color[3], fill= color[1], shape = 21, alpha = 0.8, na.rm=T) +
+  #geom_text(aes(label = round(management_emp10bins, 1)), hjust = 0.5, vjust = -1, color = "black", size = 3) +
+  scale_y_continuous(expand = c(0.01,0.01),limits = c(2.5, 3.5), breaks = seq(2.5, 3.5, by=0.25)) +
+  scale_x_continuous(expand = c(0.01,0.01),limits = c(0, 3500), breaks = seq(0,3500, by=500)) +
+  labs(x = "Firm size (employment), 10 bins", y = "Management score") +
+  theme_bg() 
+g4b
+save_fig("ch04-figure-4b-wms-mex-mgmt-emp10bins",output , "small")
+
+
+
+# This is a simpler solution, similar looking graph (not in book):
+binsreg(df$management, df$emp_firm, nbins = 10)
+
+
+
+##############################################################################
+
+# Scatterplot avg score by employment
+
+g5a<-ggplot(data = df, aes(x = emp_firm, y = management)) +
+  geom_point(color = color[1], size = 1.5,  shape = 16, alpha = 0.8, show.legend=FALSE, na.rm = TRUE) + 
+  scale_x_continuous(expand = c(0.01,0.01),limits=c(0, 5000), breaks=seq(0, 5000, by=1000)) + 
+  scale_y_continuous(expand = c(0.01,0.01),limits = c(1, 5), breaks = seq(1, 5,1)) +
+  labs(x = "Firm size (employment)",y = "Management score")+
+  theme_bg() 
+g5a
+save_fig("ch04-figure-5a-wms-mex-mgmt-emp-scatter",output , "small")
+
+df$lnemp = log(df$emp_firm)
+
+g5b<-ggplot(data = df, aes(x = lnemp, y = management)) +
+  geom_point(color = color[1], size = 1.5,  shape = 16, alpha = 0.8, show.legend=FALSE, na.rm = TRUE) + 
+  scale_x_continuous(expand = c(0.01,0.01),limits=c(4, 9), breaks=seq(4, 9, by=1)) + 
+  scale_y_continuous(expand = c(0.01,0.01),limits = c(1, 5), breaks = seq(1, 5,1)) +
+  labs(x = "Firm size (ln(employment))",y = "Management score")+
+  theme_bg() 
+g5b
+save_fig("ch04-figure-5b-wms-mex-mgmt-lnemp-scatter",output , "small")
+
+# Box plots by emp bins
+df$emp3bins <- as.factor(df$emp3bins)
+levels(df$emp3bins) <- c('Small','Medium', 'Large')
+
+# Boxplot
+g6a<-ggplot(data = df, aes(x = emp3bins, y = management)) +
+  stat_boxplot(aes(group = emp3bins), geom = "errorbar", width = 0.5, color = c(color[2], color[1], color[3]), size = 0.5, na.rm=T)+
+  geom_boxplot(aes(group = emp3bins),  color = c(color[2], color[1], color[3]), fill  = c(color[2], color[1], color[3]), size = 0.5, width = 0.5, alpha = 0.3, na.rm=T) +
+  labs(x = "Firm size (employment), 3 bins",y = "Management score")+
+  scale_y_continuous(expand = c(0.01,0.01),limits = c(1,5), breaks = seq(1,5,1)) +
+  #  geom_jitter(aes(color = emp3bins), position=position_jitter(0.1), size = 0.5, show.legend=F,  na.rm=TRUE) +
+  #scale_color_viridis(discrete = TRUE, option = "D", begin = 0, end=0.7)+
+  theme_bg() 
+g6a
+save_fig("ch04-figure-6a-wms-mex-boxplot-mgmt-emp3bins",output , "small")
+
+# Violin plot
+g6b<-ggplot(data = df, aes(x = emp3bins, y = management, color=emp3bins, fill=emp3bins)) +
+  geom_violin(aes(group = emp3bins),   size=0.3,  alpha=0.3, trim = F, show.legend=F, na.rm =TRUE) +
+  geom_boxplot(aes(group = emp3bins),  color = c(color[2], color[1], color[3]), fill  = c(color[2], color[1], color[3]), size = 0.5, width = 0.2, alpha = 0.3, na.rm=T) +
+  #  geom_jitter(aes(color = emp3bins), position=position_jitter(0.1), size = 0.5, show.legend=F,  na.rm=TRUE, alpha = 0.8) +  labs(x = "Number of Employees, 3 bins",y = "Average management quality score")+
+  labs(x = "Firm size (employment), 3 bins",y = "Management score")+
+  scale_y_continuous(expand = c(0.01,0.01),limits = c(0,6), breaks = seq(0,6,1)) +
+  scale_color_manual(name="", 
+                     values=c(color[2],color[1], color[3])) +
+  scale_fill_manual(name="", 
+                    values=c(color[2],color[1], color[3])) +
+  theme_bg() 
+g6b
+save_fig("ch04-figure-6b-wms-mex-violin-mgmt-emp3bins", output, "small")
+
+
+
+##############################################################################
+# Correlation
+cor(df$management, df$emp_firm, use = "complete.obs")
+
+datasummary( Factor( sic ) ~ N + Percent() , data = df )
+
+# by industry
+df$industry_broad[df$sic<=21] <- 'food_drinks_tobacco'
+df$industry_broad[df$sic>=22 & df$sic<=23 | df$sic==31  ] <- 'textile_apparel_leather_etc'
+df$industry_broad[df$sic>=24& df$sic<=27] <- 'wood_furniture_paper'
+df$industry_broad[df$sic>=28 & df$sic<=30] <- 'chemicals_etc'
+df$industry_broad[df$sic>=32 & df$sic<35] <- 'materials_metals'
+df$industry_broad[df$sic>=35 & df$sic<37] <- 'electronics'
+df$industry_broad[df$sic==37 ] <- 'auto'
+df$industry_broad[df$sic>=38]             <- 'other'
+
+datasummary( industry_broad ~ N , data = df )
+
+# Correlation
+df %>%
+  group_by(industry_broad) %>%
+  dplyr::summarize(COR=cor(management, emp_firm))
+
+# Summarize along industries for both emp_firm and management
+datasummary( Median + SD + Min + Max + N ~ Factor( industry_broad ) * ( emp_firm + management ) , data = df )
+
+cor<-df %>%
+  group_by(industry_broad) %>%
+  dplyr::summarize(COR=cor(management, emp_firm))
+
+
+table41 <-df %>%
+  select(emp_firm, industry_broad,management) %>% 
+  # filter(!is.na(industry_broad)) %>% 
+  group_by(industry_broad) %>%
+  dplyr::summarise(Mean = mean(management),Obs=n())
+
+table41$cor<-cor$COR
+
+
+#table41<-table41 %>% replace_na(list(industry_broad = "other"))
+table41$industry_broad<-table41$industry_broad %>% dplyr::recode(auto='Auto',
+                                                                 chemicals_etc='Chemicals',
+                                                                 electronics='Machinery, equipment, electronics',
+                                                                 food_drinks_tobacco='Food, drinks, tobacco',
+                                                                 materials_metals='Materials, metals',
+                                                                 textile_apparel_leather_etc='Textile, apparel, leather',
+                                                                 wood_furniture_paper='Wood, furniture, paper',
+                                                                 other = 'Other'
+)
+last_row<-table41 %>% summarise(Mean=mean(Mean),Obs=sum(Obs),cor=mean(cor))
+last_row$industry_broad<-'All'
+
+table41<-table41 %>% add_row(industry_broad=last_row$industry_broad,
+                             Mean=last_row$Mean,
+                             cor=last_row$cor,
+                             Obs=last_row$Obs
+)
+
+
+table41<-table41 %>% select(industry_broad,cor,Mean,Obs)
+table41
+xt<-xtable(table41,align='llccc', digits = c(0,0,2,1,0))
+names(xt) <- c('Industry','Management - employment correlation','Management score','Observations' )
+print(xt, type = "latex",include.rownames = FALSE,
+      file = paste0(output,"ch04-table-1-wms-industry-correlations.tex"))
