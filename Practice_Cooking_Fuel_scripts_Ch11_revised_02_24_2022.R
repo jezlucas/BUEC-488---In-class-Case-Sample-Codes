@@ -255,7 +255,7 @@ library(margins)
 
 
 # lpm (repeating the previous regression)
-
+lpm <-lm(cook_fl.Dummy ~ Male.Dummy + as.factor(ed_hd) + Affluence.Dummy + HHsize + HHsize_sq + Affluence.Dummy*HHsize, data=cook_data)
 summary(lpm4, vcov=sandwich)
 stargazer(lpm1, lpm2, lpm3, lpm4, digits=3, out=paste(output,"T11_reg3_R.html",sep=""))
 
